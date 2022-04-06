@@ -18,6 +18,9 @@ class BreadListView(APIView):
         serializer = BreadSerializer(breads, many=True)
         return Response(serializer.data, status=200)
 
+    @swagger_auto_schema(request_body=BreadSerializer,
+                         responses={201: "success"},
+                         operation_description="POST bread data")
     def post(self, request):
         serializer = BreadSerializer(data=request.data)
         if serializer.is_valid():
@@ -26,6 +29,9 @@ class BreadListView(APIView):
 
 
 class BreadView(APIView):
+    @swagger_auto_schema(request_body=BreadSerializer,
+                         responses={200: "success"},
+                         operation_description="PATCH bread data")
     def patch(self, request, bread_id):
         if not bread_id:
             return Response({"detail": "no bread id"}, status=400)
@@ -39,6 +45,8 @@ class BreadView(APIView):
             serializer.save()
             return Response({"detail": "SUCCESS"}, status=200)
 
+    @swagger_auto_schema(responses={204: "Contents Deleted"},
+                         operation_description="DELETE bread data")
     def delete(self, request, bread_id):
         if not bread_id:
             return Response({"detail": "no bread id"}, status=400)
@@ -61,6 +69,9 @@ class ToppingListView(APIView):
         serializer = ToppingSerializer(toppings, many=True)
         return Response(serializer.data, status=200)
 
+    @swagger_auto_schema(request_body=ToppingSerializer,
+                         responses={201: "success"},
+                         operation_description="POST topping data")
     def post(self, request):
         serializer = ToppingSerializer(data=request.data)
         if serializer.is_valid():
@@ -69,6 +80,9 @@ class ToppingListView(APIView):
 
 
 class ToppingView(APIView):
+    @swagger_auto_schema(request_body=ToppingSerializer,
+                         responses={200: "success"},
+                         operation_description="PATCH topping data")
     def patch(self, request, topping_id):
         if not topping_id:
             return Response({"detail": "no topping id"}, status=400)
@@ -85,6 +99,8 @@ class ToppingView(APIView):
             serializer.save()
             return Response({"detail": "SUCCESS"}, status=200)
 
+    @swagger_auto_schema(responses={204: "Contents Deleted"},
+                         operation_description="DELETE topping data")
     def delete(self, request, topping_id):
         if not topping_id:
             return Response({"detail": "no topping id"}, status=400)
@@ -108,6 +124,9 @@ class CheeseListView(APIView):
         serializer = CheeseSerializer(cheese, many=True)
         return Response(serializer.data, status=200)
 
+    @swagger_auto_schema(request_body=CheeseSerializer,
+                         responses={201: "success"},
+                         operation_description="POST cheese data")
     def post(self, request):
         serializer = CheeseSerializer(data=request.data)
         if serializer.is_valid():
@@ -116,6 +135,9 @@ class CheeseListView(APIView):
 
 
 class CheeseView(APIView):
+    @swagger_auto_schema(request_body=CheeseSerializer,
+                         responses={200: "success"},
+                         operation_description="PATCH cheese data")
     def patch(self, request, cheese_id):
         if not cheese_id:
             return Response({"detail": "no cheese id"}, status=400)
@@ -132,6 +154,8 @@ class CheeseView(APIView):
             serializer.save()
             return Response({"detail": "SUCCESS"}, status=200)
 
+    @swagger_auto_schema(responses={204: "Contents Deleted"},
+                         operation_description="DELETE cheese data")
     def delete(self, request, cheese_id):
         if not cheese_id:
             return Response({"detail": "no cheese id"}, status=400)
@@ -155,6 +179,9 @@ class SauceListView(APIView):
         serializer = SauceSerializer(sauces, many=True)
         return Response(serializer.data, status=200)
 
+    @swagger_auto_schema(request_body=SauceSerializer,
+                         responses={201: "success"},
+                         operation_description="POST sauces data")
     def post(self, request):
         serializer = SauceSerializer(data=request.data)
         if serializer.is_valid():
@@ -163,6 +190,9 @@ class SauceListView(APIView):
 
 
 class SauceView(APIView):
+    @swagger_auto_schema(request_body=SauceSerializer,
+                         responses={200: "success"},
+                         operation_description="PATCH sauce data")
     def patch(self, request, sauce_id):
         if not sauce_id:
             return Response({"detail": "no sauce id"}, status=400)
@@ -173,11 +203,13 @@ class SauceView(APIView):
                 "detail": f"sauce id {sauce_id} does not exists"},
                 status=400)
 
-        serializer = BreadSerializer(sauce, data=request.data, partial=True)
+        serializer = SauceSerializer(sauce, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response({"detail": "SUCCESS"}, status=200)
 
+    @swagger_auto_schema(responses={204: "Contents Deleted"},
+                         operation_description="DELETE sauce data")
     def delete(self, request, sauce_id):
         if not sauce_id:
             return Response({"detail": "no sauce id"}, status=400)

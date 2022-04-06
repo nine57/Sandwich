@@ -53,6 +53,9 @@ class SandwichListView(APIView):
 
 
 class SandwichView(APIView):
+    @swagger_auto_schema(request_body=SandwichSerializer,
+                         responses={200: "success"},
+                         operation_description="PATCH sandwich data")
     def patch(self, request, sandwich_id):
         if not sandwich_id:
             return Response({"detail": "no sandwich_id"}, status=400)
