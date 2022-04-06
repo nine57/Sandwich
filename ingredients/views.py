@@ -1,11 +1,18 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
 
-from ingredients.serializers import BreadSerializer, ToppingSerializer, CheeseSerializer, SauceSerializer
+from ingredients.serializers import (
+    BreadSerializer,
+    ToppingSerializer,
+    CheeseSerializer,
+    SauceSerializer)
 from ingredients.models import Bread, Topping, Cheese, Sauce
 
 
 class BreadListView(APIView):
+    @swagger_auto_schema(responses={200: BreadSerializer},
+                         operation_description="GET list of bread")
     def get(self, request):
         breads = Bread.objects.exclude(status="deleted")
         serializer = BreadSerializer(breads, many=True)
@@ -25,8 +32,8 @@ class BreadView(APIView):
         try:
             bread = Bread.objects.get(id=bread_id)
         except Bread.DoesNotExist:
-            return Response({"detail": f"bread id {bread_id} does not exists"}, status=400)
-
+            return Response({
+                "detail": f"bread id {bread_id} does not exists"}, status=400)
         serializer = BreadSerializer(bread, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -38,7 +45,8 @@ class BreadView(APIView):
         try:
             bread = Bread.objects.get(id=bread_id)
         except Bread.DoesNotExist:
-            return Response({"detail": f"bread id {bread_id} does not exists"}, status=400)
+            return Response({
+                "detail": f"bread id {bread_id} does not exists"}, status=400)
 
         bread.status = "deleted"
         bread.save()
@@ -46,6 +54,8 @@ class BreadView(APIView):
 
 
 class ToppingListView(APIView):
+    @swagger_auto_schema(responses={200: BreadSerializer},
+                         operation_description="GET list of toppings")
     def get(self, request):
         toppings = Topping.objects.exclude(status="deleted")
         serializer = ToppingSerializer(toppings, many=True)
@@ -65,7 +75,9 @@ class ToppingView(APIView):
         try:
             topping = Topping.objects.get(id=topping_id)
         except Topping.DoesNotExist:
-            return Response({"detail": f"topping id {topping_id} does not exists"}, status=400)
+            return Response({
+                "detail": f"topping id {topping_id} does not exists"},
+                status=400)
 
         serializer = ToppingSerializer(
             topping, data=request.data, partial=True)
@@ -79,7 +91,9 @@ class ToppingView(APIView):
         try:
             topping = Topping.objects.get(id=topping_id)
         except Topping.DoesNotExist:
-            return Response({"detail": f"topping id {topping_id} does not exists"}, status=400)
+            return Response({
+                "detail": f"topping id {topping_id} does not exists"},
+                status=400)
 
         topping.status = "deleted"
         topping.save()
@@ -87,9 +101,11 @@ class ToppingView(APIView):
 
 
 class CheeseListView(APIView):
+    @swagger_auto_schema(responses={200: CheeseSerializer},
+                         operation_description="GET list of cheese")
     def get(self, request):
-        toppings = Cheese.objects.exclude(status="deleted")
-        serializer = CheeseSerializer(toppings, many=True)
+        cheese = Cheese.objects.exclude(status="deleted")
+        serializer = CheeseSerializer(cheese, many=True)
         return Response(serializer.data, status=200)
 
     def post(self, request):
@@ -106,7 +122,9 @@ class CheeseView(APIView):
         try:
             cheese = Cheese.objects.get(id=cheese_id)
         except Cheese.DoesNotExist:
-            return Response({"detail": f"cheese id {cheese_id} does not exists"}, status=400)
+            return Response({
+                "detail": f"cheese id {cheese_id} does not exists"},
+                status=400)
 
         serializer = CheeseSerializer(
             cheese, data=request.data, partial=True)
@@ -120,7 +138,9 @@ class CheeseView(APIView):
         try:
             cheese = Cheese.objects.get(id=cheese_id)
         except Cheese.DoesNotExist:
-            return Response({"detail": f"cheese id {cheese_id} does not exists"}, status=400)
+            return Response({
+                "detail": f"cheese id {cheese_id} does not exists"},
+                status=400)
 
         cheese.status = "deleted"
         cheese.save()
@@ -128,6 +148,8 @@ class CheeseView(APIView):
 
 
 class SauceListView(APIView):
+    @swagger_auto_schema(responses={200: SauceSerializer},
+                         operation_description="GET list of sauces")
     def get(self, request):
         sauces = Sauce.objects.exclude(status="deleted")
         serializer = SauceSerializer(sauces, many=True)
@@ -147,7 +169,9 @@ class SauceView(APIView):
         try:
             sauce = Sauce.objects.get(id=sauce_id)
         except Sauce.DoesNotExist:
-            return Response({"detail": f"sauce id {sauce_id} does not exists"}, status=400)
+            return Response({
+                "detail": f"sauce id {sauce_id} does not exists"},
+                status=400)
 
         serializer = BreadSerializer(sauce, data=request.data, partial=True)
         if serializer.is_valid():
@@ -160,7 +184,8 @@ class SauceView(APIView):
         try:
             sauce = Sauce.objects.get(id=sauce_id)
         except Sauce.DoesNotExist:
-            return Response({"detail": f"sauce id {sauce_id} does not exists"}, status=400)
+            return Response({
+                "detail": f"sauce id {sauce_id} does not exists"}, status=400)
 
         sauce.status = "deleted"
         sauce.save()
