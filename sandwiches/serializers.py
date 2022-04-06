@@ -7,7 +7,7 @@ from ingredients.models import Topping, Sauce
 
 
 class SandwichSerializer(ModelSerializer):
-    # @transaction.atomic()
+    @transaction.atomic()
     def create(self, validated_data):
         bread = validated_data.get('bread')
         cheese = validated_data.get('cheese')
@@ -22,6 +22,10 @@ class SandwichSerializer(ModelSerializer):
                 f"cheese id {cheese.id} is out of stock")
 
         sandwich = Sandwich.objects.create(**validated_data)
+
+        if len(toppings) > 2 or len(sauces) > 2:
+            raise serializers.ValidationError(
+                "can not select more than 2 choices in topping & sauce")
 
         for topping in toppings:
             if Topping.in_stock == 0:
