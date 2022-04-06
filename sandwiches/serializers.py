@@ -23,6 +23,10 @@ class SandwichSerializer(ModelSerializer):
 
         sandwich = Sandwich.objects.create(**validated_data)
 
+        if len(toppings) > 2 or len(sauces) > 2:
+            raise serializers.ValidationError(
+                "can not select more than 2 choices in topping & sauce")
+
         for topping in toppings:
             if Topping.in_stock == 0:
                 raise serializers.ValidationError(

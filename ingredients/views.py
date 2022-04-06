@@ -26,6 +26,7 @@ class BreadView(APIView):
             bread = Bread.objects.get(id=bread_id)
         except Bread.DoesNotExist:
             return Response({"detail": f"bread id {bread_id} does not exists"}, status=400)
+
         serializer = BreadSerializer(bread, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()

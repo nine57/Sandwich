@@ -9,7 +9,7 @@ STATUS_TYPES = [
 class Bread(models.Model):
     name = models.CharField(max_length=255)
     in_stock = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.PositiveIntegerField()
     status = models.CharField(
         max_length=50, choices=STATUS_TYPES, default="in_use")
 
@@ -20,7 +20,7 @@ class Bread(models.Model):
 class Topping(models.Model):
     name = models.CharField(max_length=255)
     in_stock = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.PositiveIntegerField()
     status = models.CharField(
         max_length=50, choices=STATUS_TYPES, default="in_use")
 
@@ -31,7 +31,7 @@ class Topping(models.Model):
 class Cheese(models.Model):
     name = models.CharField(max_length=255)
     in_stock = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.PositiveIntegerField()
     status = models.CharField(
         max_length=50, choices=STATUS_TYPES, default="in_use")
 
@@ -42,7 +42,7 @@ class Cheese(models.Model):
 class Sauce(models.Model):
     name = models.CharField(max_length=255)
     in_stock = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.PositiveIntegerField()
     status = models.CharField(
         max_length=50, choices=STATUS_TYPES, default="in_use")
 

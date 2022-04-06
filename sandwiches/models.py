@@ -8,7 +8,7 @@ STATUS_TYPES = [
 
 class Sandwich(models.Model):
     name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.PositiveIntegerField()
     status = models.CharField(
         max_length=50, choices=STATUS_TYPES, default="in_use")
     bread = models.ForeignKey('ingredients.Bread', on_delete=models.PROTECT)
