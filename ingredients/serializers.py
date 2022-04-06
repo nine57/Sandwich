@@ -19,7 +19,7 @@ class BreadSerializer(ModelSerializer):
 
     class Meta:
         model = Bread
-        fields = ["name", "in_stock", "price", "status"]
+        fields = '__all__'
 
 
 class ToppingSerializer(ModelSerializer):
@@ -37,7 +37,7 @@ class ToppingSerializer(ModelSerializer):
 
     class Meta:
         model = Topping
-        fields = ["name", "in_stock", "price", "status"]
+        fields = '__all__'
 
 
 class CheeseSerializer(ModelSerializer):
@@ -55,7 +55,7 @@ class CheeseSerializer(ModelSerializer):
 
     class Meta:
         model = Cheese
-        fields = ["name", "in_stock", "price", "status"]
+        fields = '__all__'
 
 
 class SauceSerializer(ModelSerializer):
@@ -73,4 +73,32 @@ class SauceSerializer(ModelSerializer):
 
     class Meta:
         model = Sauce
-        fields = ["name", "in_stock", "price", "status"]
+        fields = '__all__'
+
+
+class BreadShortSerializer(ModelSerializer):
+
+    class Meta:
+        model = Bread
+        fields = ['id', 'name']
+
+
+class CheeseShortSerializer(ModelSerializer):
+
+    class Meta:
+        model = Cheese
+        fields = ['id', 'name']
+
+
+class ToppingShortSerializer(ModelSerializer):
+
+    class Meta:
+        model = Bread
+        fields = ['id', 'name']
+
+
+class SauceShortSerializer(ModelSerializer):
+
+    class Meta:
+        model = Bread
+        fields = ['id', 'name']
