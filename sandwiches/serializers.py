@@ -7,7 +7,7 @@ from ingredients.models import Topping, Sauce
 
 
 class SandwichSerializer(ModelSerializer):
-    # @transaction.atomic()
+    @transaction.atomic()
     def create(self, validated_data):
         bread = validated_data.get('bread')
         cheese = validated_data.get('cheese')
