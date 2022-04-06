@@ -4,13 +4,24 @@ from rest_framework.serializers import ModelSerializer
 
 from sandwiches.models import Sandwich
 from ingredients.serializers import (
-    BreadShortSerializer,
-    CheeseShortSerializer,
-    ToppingShortSerializer,
-    SauceShortSerializer)
+    BreadSerializer,
+    CheeseSerializer,
+    ToppingSerializer,
+    SauceSerializer,)
 
 
 class SandwichSerializer(ModelSerializer):
+    price = serializers.SerializerMethodField()
+
+    def get_price(self, instance) -> int:
+        bread = instance.bread.price
+        cheese = instance.cheese.price
+        toppings = sum([obj.price for obj in instance.toppings.all()])
+        sauces = sum([obj.price for obj in instance.sauces.all()])
+
+        price = bread + cheese + toppings + sauces
+        return price
+
     @transaction.atomic()
     def create(self, validated_data):
         bread = validated_data.get('bread')
@@ -26,10 +37,8 @@ class SandwichSerializer(ModelSerializer):
                 f"cheese id {cheese.id} is out of stock")
 
         bread.in_stock -= 1
-        price = bread.price
         bread.save()
         cheese.in_stock -= 1
-        price += cheese.price
         cheese.save()
         sandwich = Sandwich.objects.create(**validated_data)
 
@@ -42,7 +51,6 @@ class SandwichSerializer(ModelSerializer):
                 raise serializers.ValidationError(
                     f"topping id {topping.id} is out of stock")
             topping.in_stock -= 1
-            price += topping.price
             topping.save()
             sandwich.toppings.add(topping)
 
@@ -51,34 +59,58 @@ class SandwichSerializer(ModelSerializer):
                 raise serializers.ValidationError(
                     f"sauce id {sauce.id} is out of stock")
             sauce.in_stock -= 1
-            price += sauce.price
             sauce.save()
             sandwich.sauces.add(sauce)
 
-        sandwich.price = price
-        sandwich.save()
         return sandwich
+
+    @transaction.atomic()
+    def update(self, instance, validated_data):
+        instance.status = validated_data.get("status", instance.status)
+
+        bread = instance.bread
+        cheese = instance.cheese
+        toppings = instance.toppings.all()
+        sauces = instance.sauces.all()
+
+        bread.in_stock += 1
+        bread.save()
+        cheese.in_stock += 1
+        cheese.save()
+
+        for topping in toppings:
+            topping.in_stock += 1
+            topping.save()
+
+        for sauce in sauces:
+            sauce.in_stock += 1
+            sauce.save()
+
+        instance.save()
+
+        return instance
 
     class Meta:
         model = Sandwich
-        fields = '__all__'
-
-
-# class SandwichMakingSerializer(ModelSerializer):
-
-
-# class SandwichDeleteSerializer(ModelSerializer):
-
-#     class Meta:
-#         model = Sandwich
-#         fields = '__all__'
+        fields = ["name", "price", "status",
+                  "bread", "cheese", "toppings", "sauces"]
 
 
 class SandwichDetailSerializer(ModelSerializer):
-    bread = BreadShortSerializer()
-    cheese = CheeseShortSerializer()
-    toppings = ToppingShortSerializer(many=True)
-    sauces = SauceShortSerializer(many=True)
+    bread = BreadSerializer()
+    cheese = CheeseSerializer()
+    toppings = ToppingSerializer(many=True)
+    sauces = SauceSerializer(many=True)
+    price = serializers.SerializerMethodField()
+
+    def get_price(self, instance) -> int:
+        bread = instance.bread.price
+        cheese = instance.cheese.price
+        toppings = sum([obj.price for obj in instance.toppings.all()])
+        sauces = sum([obj.price for obj in instance.sauces.all()])
+
+        price = bread + cheese + toppings + sauces
+        return price
 
     class Meta:
         model = Sandwich

@@ -13,7 +13,7 @@ from sandwiches.models import Sandwich
 class SandwichListView(APIView):
     @swagger_auto_schema(responses={200: SandwichSerializer},
                          query_serializer=QuerySearchSerializer,
-                         operation_description="GET list of sandwich")
+                         operation_description="GET list of sandwiches")
     def get(self, request):
         query_para = request.GET
         bread = query_para.get("bread", None)
@@ -57,7 +57,7 @@ class SandwichListView(APIView):
 
 class SandwichView(APIView):
     @swagger_auto_schema(responses={200: SandwichDetailSerializer},
-                         operation_description="GET data of a sandwich")
+                         operation_description="GET detail of a sandwich")
     def get(self, request, sandwich_id):
         if not sandwich_id:
             return Response({"detail": "no sandwich_id"}, status=400)
@@ -70,10 +70,7 @@ class SandwichView(APIView):
         serializer = SandwichDetailSerializer(sandwich)
         return Response(serializer.data, status=200)
 
-# TODO
-    @swagger_auto_schema(request_body=SandwichSerializer,
-                         responses={200: "success"},
-                         operation_description="PATCH sandwich data")
+# dummy
     def patch(self, request, sandwich_id):
         if not sandwich_id:
             return Response({"detail": "no sandwich_id"}, status=400)
@@ -83,14 +80,16 @@ class SandwichView(APIView):
             return Response({
                 "detail": f"sandwich id {sandwich_id} does not exists"},
                 status=400)
+
         serializer = SandwichSerializer(
             sandwich, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({"detail": "SUCCESS"}, status=200)
+            return Response(serializer.data, status=200)
 
-# TODO
-    @swagger_auto_schema(responses={204: "Contents Deleted"},
+        return Response(serializer.errors, status=400)
+
+    @swagger_auto_schema(responses={200: SandwichSerializer},
                          operation_description="DELETE sandwich data")
     def delete(self, request, sandwich_id):
         if not sandwich_id:
@@ -102,13 +101,10 @@ class SandwichView(APIView):
                 "detail": f"sandwich id {sandwich_id} does not exists"},
                 status=400)
 
-        sandwich.status = "deleted"
-        sandwich.save()
-        return Response({"detail": "Contents Deleted"}, status=204)
+        serializer = SandwichSerializer(
+            sandwich, data={"status": "deleted"}, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
 
-        # serializer = SandwichDeleteSerializer(sandwich)
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response({"detail": "Contents Deleted"}, status=204)
-
-        # return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=400)
