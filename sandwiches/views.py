@@ -70,24 +70,24 @@ class SandwichView(APIView):
         serializer = SandwichDetailSerializer(sandwich)
         return Response(serializer.data, status=200)
 
-# dummy
-    def patch(self, request, sandwich_id):
-        if not sandwich_id:
-            return Response({"detail": "no sandwich_id"}, status=400)
-        try:
-            sandwich = Sandwich.objects.get(id=sandwich_id)
-        except Sandwich.DoesNotExist:
-            return Response({
-                "detail": f"sandwich id {sandwich_id} does not exists"},
-                status=400)
+# # dummy
+#     def patch(self, request, sandwich_id):
+#         if not sandwich_id:
+#             return Response({"detail": "no sandwich_id"}, status=400)
+#         try:
+#             sandwich = Sandwich.objects.get(id=sandwich_id)
+#         except Sandwich.DoesNotExist:
+#             return Response({
+#                 "detail": f"sandwich id {sandwich_id} does not exists"},
+#                 status=400)
 
-        serializer = SandwichSerializer(
-            sandwich, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
+#         serializer = SandwichSerializer(
+#             sandwich, data=request.data, partial=True)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=200)
 
-        return Response(serializer.errors, status=400)
+#         return Response(serializer.errors, status=400)
 
     @swagger_auto_schema(responses={200: SandwichSerializer},
                          operation_description="DELETE sandwich data")

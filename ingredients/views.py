@@ -26,6 +26,7 @@ class BreadListView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 class BreadView(APIView):
@@ -43,7 +44,8 @@ class BreadView(APIView):
         serializer = BreadSerializer(bread, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({"detail": "SUCCESS"}, status=200)
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
 
     @swagger_auto_schema(responses={204: "Contents Deleted"},
                          operation_description="DELETE bread data")
@@ -77,6 +79,7 @@ class ToppingListView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 class ToppingView(APIView):
@@ -97,7 +100,8 @@ class ToppingView(APIView):
             topping, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({"detail": "SUCCESS"}, status=200)
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
 
     @swagger_auto_schema(responses={204: "Contents Deleted"},
                          operation_description="DELETE topping data")
@@ -132,6 +136,7 @@ class CheeseListView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 class CheeseView(APIView):
@@ -152,7 +157,8 @@ class CheeseView(APIView):
             cheese, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({"detail": "SUCCESS"}, status=200)
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
 
     @swagger_auto_schema(responses={204: "Contents Deleted"},
                          operation_description="DELETE cheese data")
@@ -187,6 +193,7 @@ class SauceListView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 class SauceView(APIView):
@@ -206,7 +213,8 @@ class SauceView(APIView):
         serializer = SauceSerializer(sauce, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({"detail": "SUCCESS"}, status=200)
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
 
     @swagger_auto_schema(responses={204: "Contents Deleted"},
                          operation_description="DELETE sauce data")

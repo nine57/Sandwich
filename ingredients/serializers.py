@@ -74,31 +74,3 @@ class SauceSerializer(ModelSerializer):
     class Meta:
         model = Sauce
         fields = '__all__'
-
-
-class BreadShortSerializer(ModelSerializer):
-
-    class Meta:
-        model = Bread
-        fields = ['id', 'name']
-
-
-class CheeseShortSerializer(ModelSerializer):
-
-    class Meta:
-        model = Cheese
-        fields = ['id', 'name']
-
-
-class ToppingShortSerializer(ModelSerializer):
-
-    class Meta:
-        model = Bread
-        fields = ['id', 'name']
-
-
-class SauceShortSerializer(ModelSerializer):
-
-    class Meta:
-        model = Bread
-        fields = ['id', 'name']

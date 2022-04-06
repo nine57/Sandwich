@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import include, path, re_path
 from rest_framework.permissions import AllowAny
 from drf_yasg.views import get_schema_view
@@ -18,7 +17,6 @@ urlpatterns = [
     # django apps
     path('sandwiches', include('sandwiches.urls')),
     path('ingredients', include('ingredients.urls')),
-    path('admin/', admin.site.urls),
 
     # swagger setting
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
