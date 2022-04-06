@@ -3,23 +3,26 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
-from sandwiches.serializers import SandwichSerializer
+from sandwiches.serializers import (
+    SandwichSerializer,
+    SandwichDetailSerializer,
+    QuerySearchSerializer)
 from sandwiches.models import Sandwich
-from ingredients.models import Bread, Topping, Cheese, Sauce
 
 
 class SandwichListView(APIView):
     @swagger_auto_schema(responses={200: SandwichSerializer},
+                         query_serializer=QuerySearchSerializer,
                          operation_description="GET list of sandwich")
     def get(self, request):
         query_para = request.GET
         bread = query_para.get("bread", None)
-        topping = query_para.getlist("topping", None)
         cheese = query_para.get("cheese", None)
+        topping = query_para.getlist("topping", None)
         sauce = query_para.getlist("sauce", None)
         offset = int(query_para.get("offset", 0))
         limit = int(query_para.get("limit", 10))
-        price = int(query_para.get("price", None))
+        price = int(query_para.get("price", 0))
 
         filtering = Q()
         if bread:
@@ -53,6 +56,21 @@ class SandwichListView(APIView):
 
 
 class SandwichView(APIView):
+    @swagger_auto_schema(responses={200: SandwichDetailSerializer},
+                         operation_description="GET data of a sandwich")
+    def get(self, request, sandwich_id):
+        if not sandwich_id:
+            return Response({"detail": "no sandwich_id"}, status=400)
+        try:
+            sandwich = Sandwich.objects.get(id=sandwich_id)
+        except Sandwich.DoesNotExist:
+            return Response({
+                "detail": f"sandwich id {sandwich_id} does not exists"},
+                status=400)
+        serializer = SandwichDetailSerializer(sandwich)
+        return Response(serializer.data, status=200)
+
+# TODO
     @swagger_auto_schema(request_body=SandwichSerializer,
                          responses={200: "success"},
                          operation_description="PATCH sandwich data")
@@ -65,7 +83,13 @@ class SandwichView(APIView):
             return Response({
                 "detail": f"sandwich id {sandwich_id} does not exists"},
                 status=400)
+        serializer = SandwichSerializer(
+            sandwich, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"detail": "SUCCESS"}, status=200)
 
+# TODO
     @swagger_auto_schema(responses={204: "Contents Deleted"},
                          operation_description="DELETE sandwich data")
     def delete(self, request, sandwich_id):
@@ -81,3 +105,10 @@ class SandwichView(APIView):
         sandwich.status = "deleted"
         sandwich.save()
         return Response({"detail": "Contents Deleted"}, status=204)
+
+        # serializer = SandwichDeleteSerializer(sandwich)
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response({"detail": "Contents Deleted"}, status=204)
+
+        # return Response(serializer.errors, status=400)

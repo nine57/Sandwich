@@ -62,7 +62,7 @@ class BreadView(APIView):
 
 
 class ToppingListView(APIView):
-    @swagger_auto_schema(responses={200: BreadSerializer},
+    @swagger_auto_schema(responses={200: ToppingSerializer},
                          operation_description="GET list of toppings")
     def get(self, request):
         toppings = Topping.objects.exclude(status="deleted")
